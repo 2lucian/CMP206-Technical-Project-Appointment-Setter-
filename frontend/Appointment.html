@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <link rel="stylesheet" href="Appointment.css" />
+
+    <title>Appointment Setter</title>
+
+</head>
+
+<body>
+
+    <section id="header">
+
+        <header class="site-header">
+
+            <div class="header-content">
+
+                <h1>Appointment Setter</h1>
+
+                <p>
+                    Schedule and manage your doctor's appointments online
+                </p>
+
+            </div>
+
+        </header>
+
+    </section>
+
+    <section id="navigation">
+
+        <nav class="main-nav">
+
+            <div class="container nav-container">
+
+                <ul class="nav-links">
+
+                    <li>
+                        <a href="Home.html">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="#my-appointments">
+                            My Appointments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#contact-us">
+                            Contact
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../Index.html">
+                            Log Out
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </nav>
+
+    </section>
+
+    <section
+        id="create-appointment"
+        class="content-section"
+    >
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2>Create an Appointment</h2>
+
+            </div>
+
+            <div class="panel">
+
+                <form
+                    class="appointment-form"
+                    id="appointment-form"
+                >
+
+                   <div class="form-group">
+
+                        <label for="doctor_id">
+                            Select Doctor:
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <select
+                                id="doctor_id"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">
+                                    -- Choose a doctor --
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="service">
+                            Service:
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <select
+                                id="service"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">
+                                    -- Select Service --
+                                </option>
+
+                                <option value="General Consultation">
+                                    General Consultation
+                                </option>
+
+                                <option value="Dental">
+                                    Dental
+                                </option>
+
+                                <option value="Checkup">
+                                    Checkup
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+    <label for="appointment_date">
+        Preferred Date:
+    </label>
+
+    <div class="input-wrapper">
+
+        <select
+            id="appointment_date"
+            class="form-control"
+            required
+        >
+
+            <option value="">
+                -- Select Available Date --
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+                    <div class="form-group">
+
+                        <label for="appointment_time">
+                            Preferred Time:
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="time"
+                                id="appointment_time"
+                                class="form-control"
+                                required
+                            />
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="appointment_notes">
+                            Reason for Visit:
+                        </label>
+
+                        <textarea
+                            id="appointment_notes"
+                            class="form-control textarea"
+                            placeholder="Write a short reason..."
+                        ></textarea>
+
+                    </div>
+
+                    <div id="appointment-message"></div>
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                            href="Invoice.html"
+                        >
+
+                            Proceed to Checkout
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        id="my-appointments"
+        class="content-section"
+    >
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2>My Appointments</h2>
+
+            </div>
+
+            <div class="panel">
+
+                <p class="list-intro">
+                    Here are your upcoming appointments:
+                </p>
+
+                <ul
+                    class="appointment-list"
+                    id="appointment-list"
+                >
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        id="contact-us"
+        class="content-section"
+    >
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2>Contact Us</h2>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="contact-info">
+
+                    <p>
+                        If you have any issues, contact our support team:
+                    </p>
+
+                    <p>
+                        Email: support@appointmentsetter.com
+                    </p>
+
+                    <p>
+                        Phone: (000) 000-0000
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="footer">
+
+        <footer class="site-footer">
+
+            <div class="container">
+
+                <p>
+                    Appointment Setter Â© 2026
+                </p>
+
+            </div>
+
+        </footer>
+
+    </section>
+
+    <script>
+
+        async function loadDoctors() {
+            const select = document.getElementById("doctor_id");
+
+            try {
+                const response = await fetch("../getDoctors.php");
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.doctors)) {
+                    data.doctors.forEach(doctor => {
+                        const option = document.createElement("option");
+                        option.value = doctor.doctor_id;
+                        option.textContent = doctor.doctor_name;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error("Failed loading doctors:", data.message || data);
+                }
+            } catch (error) {
+                console.error("Error loading doctors:", error);
+            }
+        }
+
+
+async function loadPatientAppointments() {
+
+    const patientId =
+        getCookieValue("userID");
+
+    const appointmentList =
+        document.getElementById(
+            "appointment-list"
+        );
+
+    appointmentList.innerHTML = "";
+
+    try {
+
+        const response =
+            await fetch(
+                `../getPatientAppointments.php?patient_id=${patientId}`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            data.success &&
+            Array.isArray(data.appointments)
+        ) {
+
+            if (data.appointments.length === 0) {
+
+                appointmentList.innerHTML = `
+                    <li>
+                        No appointments found.
+                    </li>
+                `;
+
+                return;
+            }
+
+            data.appointments.forEach(appt => {
+
+                const li =
+                    document.createElement("li");
+
+                li.textContent =
+                    `Dr. ${appt.first_name} ${appt.last_name} - ${appt.appointment_date} at ${appt.appointment_time}`;
+
+                appointmentList.appendChild(li);
+
+            });
+
+        } else {
+
+            console.error(
+                "Failed loading appointments:",
+                data.message || data
+            );
+        }
+
+    } catch(error) {
+
+        console.error(
+            "Error loading appointments:",
+            error
+        );
+    }
+}
+
+        async function loadAvailableDates(doctorId) {
+
+    const dateSelect =
+        document.getElementById("appointment_date");
+
+    dateSelect.innerHTML = `
+        <option value="">
+            -- Select Available Date --
+        </option>
+    `;
+
+    if (!doctorId) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `../getAppointmentDates.php?doctor_id=${doctorId}`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            data.success &&
+            Array.isArray(data.dates)
+        ) {
+
+            data.dates.forEach(date => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = date;
+
+                option.textContent = date;
+
+                dateSelect.appendChild(option);
+
+            });
+
+        } else {
+
+            console.error(
+                "Failed loading dates:",
+                data.message || data
+            );
+        }
+
+    } catch(error) {
+
+        console.error(
+            "Error loading dates:",
+            error
+        );
+    }
+}
+
+    document
+    .getElementById("doctor_id")
+    .addEventListener(
+        "change",
+        function() {
+
+            loadAvailableDates(this.value);
+
+        }
+    );
+        
+        function getCookieValue(name) {
+            return document.cookie
+                .split('; ')
+                .find(row => row.startsWith(name + '='))
+                ?.split('=')[1] || null;
+        }
+
+        loadDoctors();
+        loadPatientAppointments();
+
+        document
+            .getElementById("appointment-form")
+            .addEventListener(
+                "submit",
+                async function(e) {
+
+                    e.preventDefault();
+
+                    // simple price map for services (client-side)
+                    const priceMap = {
+                        "General Consultation": "10.00",
+                        "Dental": "50.00",
+                        "Checkup": "25.00"
+                    };
+
+                    const payload = {
+
+                        patient_id:
+                            getCookieValue("userID"),
+
+                        doctor_id:
+                            document.getElementById("doctor_id").value,
+
+                        service:
+                            document.getElementById("service").value,
+
+                        appointment_date:
+                            document.getElementById("appointment_date").value,
+
+                        appointment_time:
+                            document.getElementById("appointment_time").value,
+
+                            appointment_notes:
+                            document.getElementById("appointment_notes").value
+
+                    };
+
+                    console.log(
+                        "Sending payload:",
+                        payload
+                    );
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "../appointment.php",
+                                {
+
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+
+                                    body: JSON.stringify(payload)
+
+                                }
+                            );
+
+                        console.log(
+                            "Raw response:",
+                            response
+                        );
+
+                        const text = await response.text();
+
+                        console.log(
+                            "Raw server response:",
+                            text
+                        );
+                        
+                        const data = JSON.parse(text);
+                        
+                        console.log("Server response:",
+                        data
+                        );
+
+                        const messageDiv =
+                            document.getElementById(
+                                "appointment-message"
+                            );
+
+                        if (data.success) {
+
+                            // Save data for the invoice page and navigate there
+                            const selectedService = document.getElementById("service").value;
+
+                            const invoiceData = {
+                                appointment_id: data.appointment_id || null,
+                                patient_id: getCookieValue("userID"),
+                                doctor_id: document.getElementById("doctor_id").value,
+                                service: document.getElementById("service").value,
+                                appointment_date: document.getElementById("appointment_date").value,
+                                appointment_time: document.getElementById("appointment_time").value,
+                                appointment_notes: document.getElementById("appointment_notes").value,
+                                appointment_duration: data.appointment_duration || '00:30:00'
+                            };
+
+                            // attach price for invoice (use priceMap)
+                            invoiceData.price = priceMap[selectedService] || '0.00';
+
+                            sessionStorage.setItem(
+                                'invoiceData',
+                                JSON.stringify(invoiceData)
+                            );
+
+                            // Redirect to invoice page
+                            window.location.href = 'Invoice.html';
+
+                        } else {
+
+                            messageDiv.innerHTML = `
+                                <p style="color: red;">
+                                    ${data.message}
+                                </p>
+                            `;
+                        }
+
+                    } catch(error) {
+
+                        console.error(
+                            "Fetch error:",
+                            error
+                        );
+
+                        document
+                            .getElementById(
+                                "appointment-message"
+                            )
+                            .innerHTML = `
+                                <p style="color:red;">
+                                    Failed to contact server.
+                                </p>
+                            `;
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Invoice.css">
+    <title>Appointment Setter</title>
+</head>
+
+<body>
+    <header id="section-header">
+  <div class="top-header bg-darker border-teal">
+    <div class="container header-content">
+      <h1 class="text-teal">Appointment Setter</h1>
+      <p class="text-white">
+        Schedule and manage your doctor's appointments online
+      </p>
+    </div>
+  </div>
+  <nav class="main-nav bg-dark border-teal">
+    <div class="container">
+      <ul class="nav-links">
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Appointment.html">My Appointments</a></li>
+        <li><a href="Appointment.html#contact-us">Contact</a></li>
+        <li><a href="../Index.html">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<section id="section-invoice">
+  <div class="container invoice-container">
+    <div class="invoice-title-area">
+      <h2 class="text-teal">Appointment Invoice</h2>
+    </div>
+
+    <div class="invoice-card bg-dark">
+      <!-- Top Info Row -->
+      <div class="info-row">
+        <div class="info-group">
+          <span class="label">Appointment ID:</span>
+          <span class="value" id="appointment-id">ID</span>
+        </div>
+        <div class="info-group">
+          <span class="label">Patient:</span>
+          <span class="value" id="patient-name">Name</span>
+        </div>
+        </div>
+
+      <!-- Table Headers -->
+      <div class="grid-4-cols text-teal table-headers">
+        <div>Date</div>
+        <div>Time</div>
+        <div>Duration</div>
+        <div>Service</div>
+      </div>
+
+      <!-- Table Values -->
+      <div class="grid-4-cols text-white table-values">
+        <div id="date-value">Date</div>
+        <div id="time-value">Time</div>
+        <div id="duration-value">Duration</div>
+        <div id="service-value">Service</div>
+      </div>
+
+      <!-- Description Bar -->
+      <div class="description-bar bg-teal text-black">
+        <div class="col-left">Description</div>
+        <div class="col-right">Price</div>
+      </div>
+
+      <!-- Service Row -->
+      <div class="service-row text-white">
+        <div class="col-left" id="service-description">Service</div>
+        <div class="col-right" id="service-price">$0.00</div>
+      </div>
+      <div class="divider-line"></div>
+
+      <!-- Total Section -->
+      <div class="total-section text-teal">
+        <span class="total-label">Total Amount:</span>
+        <span class="total-value" id="total-value">$0.00</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div id="message" class="invoice-message"></div>
+      <div class="action-buttons">
+        <button id="billingButton" type="button" class="btn-primary bg-teal text-black">
+          Proceed to Payment
+        </button>
+        <button type="button" class="btn-primary bg-teal text-black" onclick="location.href='Appointment.html'">Back</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="section-footer" class="bg-darker border-teal">
+  <div class="container">
+    <p class="text-gray">Appointment Setter © 2026</p>
+  </div>
+</footer>
+
+<script>
+
+document.getElementById("billingButton")
+.addEventListener("click", async () => {
+
+    document.getElementById("message").innerHTML =
+        "Your payment is being processed...";
+
+    const response = await fetch("../billing.php");
+
+    const data = await response.json();
+
+    window.location.href = data.approval_url;
+});
+
+// Populate invoice from sessionStorage if available
+      function populateInvoiceFromStorage() {
+        try {
+          const raw = sessionStorage.getItem('invoiceData');
+          if (!raw) return;
+          const data = JSON.parse(raw);
+
+          if (data.appointment_id) document.getElementById('appointment-id').textContent = data.appointment_id;
+          if (data.patient_id) {
+            const patientNameEl = document.getElementById('patient-name');
+            patientNameEl.textContent = data.patient_id;
+            fetch(`../getPatientName.php?patient_id=${encodeURIComponent(data.patient_id)}`)
+              .then(response => response.json())
+              .then(patientData => {
+                if (patientData.success && patientData.full_name) {
+                  patientNameEl.textContent = patientData.full_name;
+                }
+              })
+              .catch(err => {
+                console.error('Failed to load patient name:', err);
+              });
+          }
+          if (data.appointment_date) document.getElementById('date-value').textContent = data.appointment_date;
+          if (data.appointment_time) document.getElementById('time-value').textContent = data.appointment_time;
+          if (data.appointment_duration) document.getElementById('duration-value').textContent = data.appointment_duration;
+          if (data.service) {
+            document.getElementById('service-value').textContent = data.service;
+            const descEl = document.getElementById('service-description');
+            if (descEl) descEl.textContent = data.service;
+          }
+
+          // If price is provided, show it formatted; otherwise leave default
+          if (data.price) {
+            const num = parseFloat(data.price);
+            const formattedPrice = !isNaN(num) ? `$${num.toFixed(2)}` : data.price;
+            document.getElementById('total-value').textContent = formattedPrice;
+            const priceEl = document.getElementById('service-price');
+            if (priceEl) priceEl.textContent = formattedPrice;
+          }
+        } catch (err) {
+          console.error('Failed to populate invoice:', err);
+        }
+      }
+
+      populateInvoiceFromStorage();
+
+      document.getElementById("billingButton")
+      .addEventListener("click", async () => {
+
+        const messageEl = document.getElementById("message");
+        messageEl.innerHTML = "Your payment is being processed...";
+
+        try {
+          const response = await fetch("../billing.php");
+
+          if (!response.ok) throw new Error(`Server ${response.status}`);
+
+          const data = await response.json();
+
+          if (!data || !data.approval_url) throw new Error('Invalid payment response');
+
+          window.location.href = data.approval_url;
+        } catch (error) {
+          console.error('Billing request failed:', error);
+          messageEl.innerHTML = `<p style="color:red;">Payment failed: ${error.message}</p>`;
+        }
+      });
+
+</script>
+
+</body>
+
+</html>

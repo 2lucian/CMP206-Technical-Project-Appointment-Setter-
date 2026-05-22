@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <link rel="stylesheet" href="Admin.css" />
+  <title>Appointment Setter</title>
+</head>
+
+<body>
+
+<section id="section-header">
+  <header class="main-header container">
+    <h1>Appointment Setter</h1>
+    <p>You’re set — schedule a visit or switch account.</p>
+  </header>
+</section>
+
+<section id="section-navigation">
+  <nav class="top-nav container">
+    <a href="../Index.html">Log Out</a>
+  </nav>
+</section>
+
+<section id="section-dashboard">
+
+  <div class="stats-grid container">
+
+    <!-- TOTAL USERS -->
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        <img
+          src="../img/thatguy.png"
+          alt="Total Users Icon"
+        />
+      </div>
+
+      <div class="stat-info">
+        <h3>Total Users</h3>
+
+        <p
+          class="stat-value"
+          id="total-users"
+        >
+          0
+        </p>
+      </div>
+
+    </div>
+
+    <!-- TOTAL APPOINTMENTS -->
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        <img
+          src="../img/appointmentsetterlogo.png"
+          alt="Total Appointments Icon"
+        />
+      </div>
+
+      <div class="stat-info">
+        <h3>Total Appointments</h3>
+
+        <p
+          class="stat-value"
+          id="total-appointments"
+        >
+          0
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="section-user-management">
+
+  <div class="user-management-content container">
+
+    <div class="section-title">
+      <h2>User Management</h2>
+    </div>
+
+    <!-- USER LIST -->
+    <div class="user-list-container">
+
+      <div
+        class="user-list"
+        id="user-list"
+      >
+
+      </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+
+      <button
+        id="add-user-btn"
+        class="btn-action"
+        type="button"
+      >
+        Add User
+      </button>
+
+      <button
+        id="delete-user-btn"
+        class="btn-action"
+        type="button"
+        disabled
+      >
+        Delete
+      </button>
+
+      <button
+        id="edit-user-btn"
+        class="btn-action"
+        type="button"
+        disabled
+      >
+        Edit
+      </button>
+
+    </div>
+
+    <!-- ADD USER FORM -->
+    <div
+      id="add-user-form"
+      class="add-user-form hidden"
+    >
+
+      <h3>Add New User</h3>
+
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="new-first-name">
+            First Name
+          </label>
+
+          <input
+            id="new-first-name"
+            type="text"
+            placeholder="First name"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="new-last-name">
+            Last Name
+          </label>
+
+          <input
+            id="new-last-name"
+            type="text"
+            placeholder="Last name"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="new-email">
+            Email
+          </label>
+
+          <input
+            id="new-email"
+            type="email"
+            placeholder="Email address"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="new-password">
+            Password
+          </label>
+
+          <input
+            id="new-password"
+            type="password"
+            placeholder="Password"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="new-phone">
+            Phone
+          </label>
+
+          <input
+            id="new-phone"
+            type="text"
+            placeholder="Phone number"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="new-role">
+            Role
+          </label>
+
+          <select id="new-role">
+
+            <option value="patient">
+              Patient
+            </option>
+
+            <option value="doctor">
+              Doctor
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="form-field patient-only">
+
+          <label for="new-gender">
+            Gender
+          </label>
+
+          <select id="new-gender">
+
+            <option value="">
+              Select gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="form-field patient-only">
+
+          <label for="new-dob">
+            Date of Birth
+          </label>
+
+          <input
+            id="new-dob"
+            type="date"
+          />
+
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          id="save-user-btn"
+          class="btn-action"
+          type="button"
+        >
+          Create User
+        </button>
+
+        <button
+          id="cancel-add-btn"
+          class="btn-secondary"
+          type="button"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+      <p
+        id="add-user-error"
+        class="form-error"
+      >
+      </p>
+
+    </div>
+
+    <p
+      id="selected-user-info"
+      class="selected-user-info"
+    >
+      Select a user to enable edit/delete.
+    </p>
+
+  </div>
+
+</section>
+
+<section id="section-footer">
+
+  <footer class="main-footer container">
+
+    <p>
+      Appointment Setter © 2026
+    </p>
+
+  </footer>
+
+</section>
+
+<script>
+  const addUserButton = document.getElementById('add-user-btn');
+  const deleteUserButton = document.getElementById('delete-user-btn');
+  const editUserButton = document.getElementById('edit-user-btn');
+  const selectedUserInfo = document.getElementById('selected-user-info');
+
+  let selectedItem = null;
+  let selectedUser = null;
+
+  function updateActionState() {
+    const hasSelection = Boolean(selectedUser);
+    deleteUserButton.disabled = !hasSelection;
+    editUserButton.disabled = !hasSelection;
+    selectedUserInfo.textContent = hasSelection
+      ? `Selected user: ${selectedUser.name} (${selectedUser.role})`
+      : 'Select a user to enable edit/delete.';
+  }
+
+  function clearSelection() {
+    if (selectedItem) {
+      selectedItem.classList.remove('selected');
+      selectedItem = null;
+    }
+    selectedUser = null;
+    updateActionState();
+  }
+
+  function selectUser(item, user) {
+    if (selectedItem) {
+      selectedItem.classList.remove('selected');
+    }
+    selectedItem = item;
+    selectedUser = user;
+    selectedItem.classList.add('selected');
+    updateActionState();
+  }
+
+  async function refreshUsers() {
+    clearSelection();
+    const list = document.getElementById('user-list');
+    list.innerHTML = '';
+
+    try {
+      const response = await fetch('../getUsers.php');
+      const data = await response.json();
+
+      if (!data.success || !Array.isArray(data.users)) {
+        console.error('Failed to load users:', data.message || data);
+        return;
+      }
+
+      data.users.forEach(user => {
+        const maskedPassword = user.password ? '••••••••' : '';
+        const item = document.createElement('div');
+        item.className = 'user-item';
+        item.innerHTML = `
+          <div class="user-col">
+            <p><strong>ID</strong>: ${user.user_id}</p>
+            <p><strong>Name</strong>: ${user.name}</p>
+          </div>
+          <div class="user-col">
+            <p><strong>Email</strong>: ${user.email}</p>
+            <p><strong>Password</strong>: ${maskedPassword}</p>
+          </div>
+          <div class="user-col role-col">
+            <p><strong>Role</strong>: ${user.role}</p>
+          </div>
+        `;
+
+        item.addEventListener('click', () => selectUser(item, user));
+        list.appendChild(item);
+      });
+    } catch (error) {
+      console.error('Error loading user list:', error);
+    }
+  }
+
+  const addUserForm = document.getElementById('add-user-form');
+  const saveUserButton = document.getElementById('save-user-btn');
+  const cancelAddButton = document.getElementById('cancel-add-btn');
+  const roleSelect = document.getElementById('new-role');
+  const genderField = document.querySelector('.patient-only:nth-child(7)');
+  const dobField = document.querySelector('.patient-only:nth-child(8)');
+  const addUserError = document.getElementById('add-user-error');
+
+  function togglePatientFields() {
+    const isPatient = roleSelect.value === 'patient';
+    document.querySelectorAll('.patient-only').forEach(field => {
+      field.style.display = isPatient ? 'block' : 'none';
+    });
+  }
+
+  function showAddUserForm() {
+    addUserForm.classList.remove('hidden');
+    addUserButton.textContent = 'Hide Form';
+    addUserError.textContent = '';
+    togglePatientFields();
+  }
+
+  function hideAddUserForm() {
+    addUserForm.classList.add('hidden');
+    addUserButton.textContent = 'Add User';
+    addUserError.textContent = '';
+    document.getElementById('new-first-name').value = '';
+    document.getElementById('new-last-name').value = '';
+    document.getElementById('new-email').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('new-phone').value = '';
+    document.getElementById('new-role').value = 'patient';
+    document.getElementById('new-gender').value = '';
+    document.getElementById('new-dob').value = '';
+  }
+
+  addUserButton.addEventListener('click', () => {
+    if (addUserForm.classList.contains('hidden')) {
+      showAddUserForm();
+    } else {
+      hideAddUserForm();
+    }
+  });
+
+  roleSelect.addEventListener('change', togglePatientFields);
+
+  saveUserButton.addEventListener('click', async () => {
+    const firstName = document.getElementById('new-first-name').value.trim();
+    const lastName = document.getElementById('new-last-name').value.trim();
+    const email = document.getElementById('new-email').value.trim();
+    const password = document.getElementById('new-password').value.trim();
+    const phone = document.getElementById('new-phone').value.trim();
+    const role = document.getElementById('new-role').value;
+    const gender = document.getElementById('new-gender').value;
+    const dob = document.getElementById('new-dob').value;
+
+    if (!firstName || !lastName || !email || !password || !phone || !role) {
+      addUserError.textContent = 'Please fill in all required fields.';
+      return;
+    }
+
+    if (role === 'patient' && (!gender || !dob)) {
+      addUserError.textContent = 'Patient users require gender and date of birth.';
+      return;
+    }
+
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+      phone_number: phone,
+      role
+    };
+
+    if (role === 'patient') {
+      payload.gender = gender;
+      payload.dob = dob;
+    }
+
+    try {
+      const response = await fetch('../createUser.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        addUserError.textContent = data.message || 'Failed to create user.';
+        return;
+      }
+
+      hideAddUserForm();
+      await refreshUsers();
+      alert('User added successfully.');
+    } catch (error) {
+      console.error('Create user failed:', error);
+      addUserError.textContent = 'An error occurred creating the user.';
+    }
+  });
+
+  deleteUserButton.addEventListener('click', async () => {
+    if (!selectedUser) {
+      return;
+    }
+
+    const confirmed = confirm(`Delete ${selectedUser.name} (${selectedUser.role})? This cannot be undone.`);
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch('../deleteUser.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: selectedUser.user_id, role: selectedUser.role })
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        alert('Delete failed: ' + (data.message || 'Unknown error'));
+        return;
+      }
+
+      await refreshUsers();
+      alert('User deleted successfully.');
+    } catch (error) {
+      console.error('Delete request failed:', error);
+      alert('An error occurred while deleting the user.');
+    }
+  });
+
+  editUserButton.addEventListener('click', async () => {
+    if (!selectedUser) {
+      return;
+    }
+
+    const newName = prompt('Edit full name:', selectedUser.name);
+    if (newName === null) {
+      return;
+    }
+
+    const newEmail = prompt('Edit email address:', selectedUser.email);
+    if (newEmail === null) {
+      return;
+    }
+
+    const newPassword = prompt('Enter new password (leave empty to keep current):', '');
+    if (newPassword === null) {
+      return;
+    }
+
+    const payload = {
+      user_id: selectedUser.user_id,
+      role: selectedUser.role
+    };
+
+    if (newName.trim() !== selectedUser.name) {
+      payload.name = newName.trim();
+    }
+    if (newEmail.trim() !== selectedUser.email) {
+      payload.email = newEmail.trim();
+    }
+    if (newPassword.trim().length > 0) {
+      payload.password = newPassword.trim();
+    }
+
+    if (!payload.name && !payload.email && !payload.password) {
+      alert('No changes were made.');
+      return;
+    }
+
+    try {
+      const response = await fetch('../updateUser.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        alert('Update failed: ' + (data.message || 'Unknown error'));
+        return;
+      }
+
+      await refreshUsers();
+      alert('User updated successfully.');
+    } catch (error) {
+      console.error('Update request failed:', error);
+      alert('An error occurred while updating the user.');
+    }
+  });
+
+  async function loadDashboardStats() {
+
+    try {
+
+      const response =
+        await fetch('../dashboardStats.php');
+
+      const data =
+        await response.json();
+
+      if (!data.success) {
+
+        console.error(
+          'Failed to load dashboard stats'
+        );
+
+        return;
+      }
+
+      document.getElementById(
+        'total-users'
+      ).textContent =
+        data.total_users;
+
+      document.getElementById(
+        'total-appointments'
+      ).textContent =
+        data.total_appointments;
+
+    } catch (error) {
+
+      console.error(
+        'Error loading dashboard stats:',
+        error
+      );
+    }
+  }
+
+  loadDashboardStats();
+  refreshUsers();
+
+</script>
+
+</body>
+
+</html>

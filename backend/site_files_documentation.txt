@@ -1,0 +1,47 @@
+Site Files Documentation
+
+Root files:
+- appointment_setter (3).sql: SQL dump related to appointment scheduling (exported DB file).
+- appointment.php: Backend script handling appointment operations.
+- billing.php: Billing and invoice processing endpoints.
+- cancel.php: Endpoint to cancel appointments.
+- createUser.php: Creates a new user account.
+- dashboardStats.php: Returns statistics for admin dashboard.
+- dbconnect.php: Database connection configuration (credentials and connection code).
+- deleteUser.php: Deletes a user account.
+- doctor.php: Doctor-related backend functions and endpoints.
+- getAppointmentDates.php: Returns available appointment dates.
+- getAppointments.php: Retrieves appointment records.
+- getDoctors.php: Returns list/details of doctors.
+- getPatientAppointments.php: Retrieves appointments for a specific patient.
+- getPatientName.php: Utility to fetch a patient's name by ID.
+- getUsers.php: Retrieves list of users.
+- Index.css: Global or main CSS file used by the frontend.
+- Index.html: Main landing page / entry point of the site.
+- login.php: Handles user authentication (login).
+- saveAvailableDates.php: Saves doctor availability / available dates.
+- signup.php: Handles user registration.
+- success.php: Generic success/confirmation page.
+- updateUser.php: Updates user profile or account details.
+
+Frontend/ directory:
+- Admin.css: Styles for the admin UI.
+- Admin.html: Admin interface page.
+- Appointment.css: Styles for appointment-related frontend.
+- Appointment.html: Appointment booking/viewing UI.
+- Doctor.css: Styles specific to doctor pages.
+- Doctor.html: Doctor profile / management UI.
+- Home.css: Styles for the homepage.
+- Home.html: Homepage for authenticated/visitors.
+- Invoice.css: Styles for invoice pages.
+- Invoice.html: Invoice display or printing page.
+- Log_In.css: Styles for the login page.
+- Log_In.html: Login form UI.
+- Sign_Up.css: Styles for the signup page.
+- Sign_Up.html: Signup form UI.
+
+img/ directory:
+- Contains image assets used across the site (logos, avatars, icons).
+
+Notes:
+- File purposes are inferred from filenames; open specific files for exact behavior and endpoints.

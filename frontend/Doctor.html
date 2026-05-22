@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="stylesheet"
+        href="Doctor.css"
+    >
+
+    <title>
+        Appointment Setter
+    </title>
+
+</head>
+
+<body>
+
+<header id="section-header">
+
+    <div class="header-top">
+
+        <div class="container header-top-content">
+
+            <h1>
+                Appointment Setter
+            </h1>
+
+            <p>
+                You’re set — schedule a visit or switch account.
+            </p>
+
+        </div>
+
+    </div>
+
+    <nav class="header-nav">
+
+        <div class="container nav-content">
+
+            <a
+                href="../Index.html"
+                class="logout-link"
+            >
+
+                Log Out
+
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+<main id="section-main">
+
+    <div class="container main-container">
+
+        <!-- LEFT COLUMN -->
+
+        <section class="column-left">
+
+            <header class="section-header">
+
+                <h2>
+                    Appointments
+                </h2>
+
+            </header>
+
+            <div class="appointments-list-container">
+
+                <div
+                    class="appointments-list"
+                    id="appointments-list"
+                >
+
+                </div>
+
+            </div>
+
+            <aside class="info-box">
+
+                <p>
+
+                    This dashboard displays all
+                    patient appointments assigned
+                    to the doctor.
+
+                </p>
+
+            </aside>
+
+        </section>
+
+        <!-- RIGHT COLUMN -->
+
+        <section class="column-right">
+
+            <header class="section-header">
+
+                <h2>
+                    Available Days
+                </h2>
+
+            </header>
+
+            <div class="form-container">
+
+                <form
+                    class="appointment-form"
+                    id="availability-form"
+                >
+
+                    <div class="form-group">
+
+                        <label for="available_date">
+
+                            Available Date:
+
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="date"
+                                id="available_date"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div id="availability-message"></div>
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+
+                        Submit Available Date
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+<footer id="section-footer">
+
+    <div class="container footer-content">
+
+        <p>
+            Appointment Setter © 2026
+        </p>
+
+    </div>
+
+</footer>
+
+<script>
+
+/*
+|--------------------------------------------------------------------------
+| LOAD APPOINTMENTS
+|--------------------------------------------------------------------------
+*/
+
+async function loadAppointments() {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost/getAppointments.php"
+            );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Appointments:",
+            data
+        );
+
+        const container =
+            document.getElementById(
+                "appointments-list"
+            );
+
+        container.innerHTML = "";
+
+        if (
+            data.success &&
+            data.appointments.length > 0
+        ) {
+
+            data.appointments.forEach(
+                appointment => {
+
+                    const notesText = appointment.appointment_notes || "No notes provided.";
+
+                    container.innerHTML += `
+
+                        <article class="appointment-card" data-notes="${notesText.replace(/"/g, '&quot;')}">
+
+                            <div class="card-content">
+
+                                <p>
+
+                                    <strong>
+                                        Patient:
+                                    </strong>
+
+                                    ${appointment.first_name}
+                                    ${appointment.last_name}
+
+                                </p>
+
+                                <p>
+
+                                    <strong>
+                                        Service:
+                                    </strong>
+
+                                    ${appointment.service}
+
+                                </p>
+
+                                <p>
+
+                                    <strong>
+                                        Date:
+                                    </strong>
+
+                                    ${appointment.appointment_date}
+
+                                </p>
+
+                                <p>
+
+                                    <strong>
+                                        Time:
+                                    </strong>
+
+                                    ${appointment.appointment_time}
+
+                                </p>
+
+                            </div>
+
+                        </article>
+
+                    `;
+                }
+            );
+
+            attachAppointmentCardEvents();
+
+        } else {
+
+            container.innerHTML = `
+
+                <p>
+                    No appointments found.
+                </p>
+
+            `;
+        }
+
+    } catch(error) {
+
+        console.error(
+            "Error loading appointments:",
+            error
+        );
+    }
+}
+function attachAppointmentCardEvents() {
+    const cards = document.querySelectorAll('.appointment-card');
+    const infoBox = document.querySelector('.info-box');
+    const infoText = infoBox.querySelector('p');
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            cards.forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            const notes = card.dataset.notes || 'No notes provided.';
+            infoText.textContent = notes;
+        });
+    });
+}
+/*
+|--------------------------------------------------------------------------
+| SAVE AVAILABLE DATE
+|--------------------------------------------------------------------------
+*/
+
+// Helper to read a cookie value by name
+function getCookieValue(name) {
+    const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+    return match ? decodeURIComponent(match.split('=')[1]) : null;
+}
+
+
+document
+    .getElementById("availability-form")
+    .addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            const payload = {
+
+                doctor_id:
+                    getCookieValue("userID"),
+
+                available_date:
+                    document.getElementById(
+                        "available_date"
+                    ).value
+
+            };
+
+            console.log(
+                "Availability payload:",
+                payload
+            );
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://localhost/saveAvailableDates.php",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(payload)
+
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                console.log(
+                    "Availability response:",
+                    data
+                );
+
+                const messageDiv =
+                    document.getElementById(
+                        "availability-message"
+                    );
+
+                if (data.success) {
+
+                    messageDiv.innerHTML = `
+
+                        <p style="color: green;">
+
+                            Availability saved successfully!
+
+                        </p>
+
+                    `;
+
+                    document
+                        .getElementById(
+                            "availability-form"
+                        )
+                        .reset();
+
+                } else {
+
+                    messageDiv.innerHTML = `
+
+                        <p style="color: red;">
+
+                            ${data.message}
+
+                        </p>
+
+                    `;
+                }
+
+            } catch(error) {
+
+                console.error(
+                    "Availability fetch error:",
+                    error
+                );
+
+                document
+                    .getElementById(
+                        "availability-message"
+                    )
+                    .innerHTML = `
+
+                        <p style="color:red;">
+
+                            Failed to contact server.
+
+                        </p>
+
+                    `;
+            }
+
+        }
+    );
+
+/*
+|--------------------------------------------------------------------------
+| INITIAL LOAD
+|--------------------------------------------------------------------------
+*/
+
+loadAppointments();
+
+</script>
+
+</body>
+
+</html>

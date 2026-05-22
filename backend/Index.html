@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Index.css">
+    <title>Appointment Setter</title>
+</head>
+
+<body>
+    <section id="section-header">
+        <header class="site-header">
+            <h1>Appointment Setter</h1>
+            <p>Schedule care online — get started in a moment</p>
+        </header>
+    </section>
+
+    <section id="section-main" class="main-section">
+        <div class="container">
+            <p class="welcome-text">
+                Welcome. Choose how you’d like to continue: register your details as a
+                new<br class="desktop-break" />
+                user, or log in if you already have an account.
+            </p>
+
+            <div class="cards-wrapper">
+                <!-- Sign Up Card -->
+                <div class="auth-card">
+                    <div class="card-header">
+                        <h2>New here?</h2>
+                        <p>
+                            Add your name, phone number, and email so we can save your profile
+                            to our system.
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-primary" type="button" onclick="location.href='/Frontend/Sign_Up.html'">Sign up</button>
+                        <span class="action-note">Creates your record (registration)</span>
+                    </div>
+                </div>
+
+                <!-- Log In Card -->
+                <div class="auth-card">
+                    <div class="card-header">
+                        <h2>Already registered?</h2>
+                        <p>
+                            We’ll match you to the information already stored for your account.
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-primary" type="button" onclick="location.href='/Frontend/Log_In.html'">Log in</button>
+                        <span class="action-note">Uses saved account data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="section-footer">
+        <footer class="site-footer">
+            <p>Appointment Setter © 2026</p>
+        </footer>
+    </section>
+</body>
+
+</html>

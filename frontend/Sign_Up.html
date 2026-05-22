@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Sign_Up.css">
+    <title>Appointment Setter</title>
+</head>
+
+<body>
+
+<section id="section-header">
+    <header class="site-header">
+        <h1 class="header-title">Appointment Setter</h1>
+        <p class="header-subtitle">
+            Register your details — they will be sent to the server to create your
+            account
+        </p>
+    </header>
+</section>
+
+<section id="section-nav">
+    <nav class="nav-container">
+        <a href="../Index.html" class="nav-link">Home</a>
+        <a href="Log_In.html" class="nav-link">Log in</a>
+        <a href="Sign_Up.html" class="nav-link">Sign up</a>
+    </nav>
+</section>
+
+<section id="section-main">
+    <div class="main-container">
+
+        <div class="form-wrapper">
+
+            <div class="form-header">
+                <h2 class="form-title">Your information</h2>
+            </div>
+
+            <form class="signup-form" id="signup-form">
+
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+
+                    <input
+                        type="text"
+                        id="firstName"
+                        name="first_name"
+                        placeholder="Enter your first name"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+
+                    <input
+                        type="text"
+                        id="lastName"
+                        name="last_name"
+                        placeholder="Enter your last name"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNumber">Contact number</label>
+
+                    <input
+                        type="tel"
+                        id="contactNumber"
+                        name="phone_number"
+                        placeholder="e.g. 123-456-7890"
+                        required
+                    />
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group half">
+                        <label for="gender">Gender</label>
+
+                        <input
+                            type="text"
+                            id="gender"
+                            name="gender"
+                            placeholder="Enter your Gender"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="dob">D.O.B</label>
+
+                        <input
+                            type="date"
+                            id="dob"
+                            name="dob"
+                            required
+                        />
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    />
+                </div>
+
+                <div id="signup-message"></div>
+
+                <button type="submit" class="submit-btn">
+                    Continue
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+<section id="section-footer">
+    <footer class="site-footer">
+        <p>Appointment Setter © 2026</p>
+    </footer>
+</section>
+
+<script>
+
+document.getElementById("signup-form").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const payload = {
+
+        first_name: document.getElementById("firstName").value,
+        last_name: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        phone_number: document.getElementById("contactNumber").value,
+        gender: document.getElementById("gender").value,
+        dob: document.getElementById("dob").value
+
+    };
+
+    console.log("Sending payload:", payload);
+
+    try {
+
+        const response = await fetch("../signup.php", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(payload)
+
+        });
+
+        const data = await response.json();
+
+        console.log("Server response:", data);
+
+        const messageDiv = document.getElementById("signup-message");
+
+        if (data.success) {
+
+            messageDiv.innerHTML = `
+                <p style="color: green;">
+                    Account created successfully!
+                </p>
+            `;
+
+            document.getElementById("signup-form").reset();
+
+        } else {
+
+            messageDiv.innerHTML = `
+                <p style="color: red;">
+                    ${data.message}
+                </p>
+            `;
+        }
+
+    } catch(error) {
+
+        console.error("Fetch error:", error);
+
+        document.getElementById("signup-message").innerHTML = `
+            <p style="color: red;">
+                Something went wrong while contacting the server.
+            </p>
+        `;
+    }
+
+});
+
+</script>
+
+</body>
+</html>

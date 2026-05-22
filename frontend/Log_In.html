@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Log_In.css">
+    <title>Appointment Setter</title>
+</head>
+
+<body>
+  <section id="section-header">
+  <header class="site-header">
+    <div class="header-top">
+      <h1>Appointment Setter</h1>
+      <span class="subtitle">Log In</span>
+    </div>
+    <nav class="header-nav">
+      <ul class="nav-links">
+        <li><a href="../Index.html">Home</a></li>
+        <li><a href="Log_In.html">Log in</a></li>
+        <li><a href="Sign_Up.html">Sign up</a></li>
+      </ul>
+    </nav>
+  </header>
+</section>
+
+<section id="section-login">
+  <main class="login-main">
+    <div class="login-wrapper">
+      <div class="login-heading">
+        <h2>Account access</h2>
+      </div>
+      <div class="login-card">
+        <form class="login-form" action="../login.php" method="POST">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email on your account"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Your password"
+                required
+              />
+            </div>
+          </div>
+          <div id="login-error" class="login-error" role="alert" style="color: #d9534f; margin-bottom: 1rem;"></div>
+          <button type="submit" class="submit-btn">Log In</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="section-footer">
+  <footer class="site-footer">
+    <p>Appointment Setter © 2026</p>
+  </footer>
+</section>
+</section>
+
+<script>
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error')) {
+      const msg = 'Your email or password was incorrect.';
+      // show a popup alert
+      alert(msg);
+      // also display inline message in the page for accessibility
+      const el = document.getElementById('login-error');
+      if (el) el.textContent = msg;
+      // remove the query param so refresh doesn't show the popup again
+      if (window.history && window.history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('error');
+        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      }
+    }
+  })();
+</script>
+</body>
+
+</html>
